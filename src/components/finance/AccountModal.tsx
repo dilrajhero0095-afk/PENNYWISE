@@ -1,7 +1,7 @@
 import { LockKeyhole, LogOut, Sparkles, UserRound, X } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import type { User } from '@supabase/supabase-js'
-import { supabase, supabaseConfigured } from '../../lib/supabase'
+import { supabase, supabaseConfigured, supabaseMissing } from '../../lib/supabase'
 
 type AccountModalProps = { onClose: () => void; currentUser: User | null; onAuthenticated: (user: User) => void; onSignOut: () => void }
 type Mode = 'signin' | 'signup'
@@ -17,7 +17,7 @@ export function AccountModal({ onClose, currentUser, onAuthenticated, onSignOut 
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault(); setError(''); setMessage('')
-    if (!supabaseConfigured || !supabase) return setError('Supabase Auth is not available in this preview yet.')
+    if (!supabaseConfigured || !supabase) return setError(`Supabase is not connected yet. Add ${supabaseMissing.join(' and ')} in Netlify (Project configuration → Environment variables), then redeploy.`)
     if (!email.includes('@')) return setError('Enter a valid email address.')
     if (password.length < 8) return setError('Use at least 8 characters for your password.')
     if (mode === 'signup' && password !== confirm) return setError('Those passwords do not match.')

@@ -48,7 +48,7 @@ export async function syncAuthenticatedTransactions(user: User, localTransaction
   if (error) return { remote: [] as Transaction[], error }
   const remote = (data ?? []) as CloudTransaction[]
   if (!remote.length && localTransactions.length) {
-    const result = await supabase.from('transactions').upsert(localTransactions.map((item) => toRow(user.id, item)), { onConflict: 'id' })
+    const result = await supabase.from('transactions').upsert(localTransactions.map((item) => toRow(user.id, item)), { onConflict: 'user_id,id' })
     return { remote: localTransactions, error: result.error }
   }
   return { remote: remote.map(fromRow), error: null }
@@ -56,7 +56,7 @@ export async function syncAuthenticatedTransactions(user: User, localTransaction
 
 export async function saveAuthenticatedTransaction(user: User | null, transaction: Transaction) {
   if (!supabase || !user) return
-  await supabase.from('transactions').upsert(toRow(user.id, transaction), { onConflict: 'id' })
+  await supabase.from('transactions').upsert(toRow(user.id, transaction), { onConflict: 'user_id,id' })
 }
 
 export async function deleteAuthenticatedTransaction(user: User | null, id: string) {
