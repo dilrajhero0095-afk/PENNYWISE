@@ -1,0 +1,4 @@
+import { ArrowDownRight, ArrowUpRight, Landmark, PiggyBank, WalletCards } from 'lucide-react'
+
+type StatCardProps = { label: string; value: string; change: string; positive?: boolean; tone: 'blue' | 'cream' | 'green' | 'ink'; icon?: 'wallet' | 'income' | 'saving' }
+export function StatCard({ label, value, change, positive = true, tone, icon }: StatCardProps) { const Icon = icon === 'saving' ? PiggyBank : icon === 'income' ? Landmark : WalletCards; return <article className={`stat-card stat-card--${tone}`}><div className="stat-card__top"><span>{label}</span><span className="stat-card__icon"><Icon size={17} strokeWidth={1.7} /></span></div><strong>{value}</strong><div className={`stat-card__change ${positive ? 'is-positive' : 'is-negative'}`}>{positive ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />} {change}<span>vs last month</span></div></article> }
